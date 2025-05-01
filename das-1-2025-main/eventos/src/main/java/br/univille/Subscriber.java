@@ -9,23 +9,17 @@ import com.azure.messaging.servicebus.models.ServiceBusReceiveMode;
 
 public class Subscriber {
     public static void main(String[] args) {
-        String topicName = "topic-das1";
+        String topicName = "topic-chat";
         String subscriptionName = "subscription-lusca";
         String fqdns = "sb-das12025-test-brazilsouth.servicebus.windows.net";
 
-        DefaultAzureCredential credential = 
-            new DefaultAzureCredentialBuilder()
-            .build();
+        DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
         
         ServiceBusProcessorClient processorClient = new ServiceBusClientBuilder()
-            .fullyQualifiedNamespace(fqdns)
-            .credential(credential)
-            .transportType(AmqpTransportType.AMQP_WEB_SOCKETS)
-            .processor()
-            .topicName(topicName)
-            .subscriptionName(subscriptionName)
-            .receiveMode(ServiceBusReceiveMode.PEEK_LOCK)
-            .processMessage(context -> {
+            .fullyQualifiedNamespace(fqdns).credential(credential)
+            .transportType(AmqpTransportType.AMQP_WEB_SOCKETS).processor()
+            .topicName(topicName).subscriptionName(subscriptionName)
+            .receiveMode(ServiceBusReceiveMode.PEEK_LOCK).processMessage(context -> {
                 System.out.println("Mensagem recebida: " + context.getMessage().getBody().toString());
                 context.complete();
             })

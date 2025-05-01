@@ -17,11 +17,9 @@ public class Producer {
         ServiceBusSenderClient senderClient = 
             new ServiceBusClientBuilder()
             .fullyQualifiedNamespace("sb-das12025-test-brazilsouth.servicebus.windows.net")
-            .credential(credential)
-            .transportType(AmqpTransportType.AMQP_WEB_SOCKETS)
-            .sender()
-            .queueName(queueName)
-            .buildClient();
+            .credential(credential).transportType(AmqpTransportType.AMQP_WEB_SOCKETS).sender()
+            .queueName(queueName).buildClient();
+            
         senderClient.sendMessage(new ServiceBusMessage("Ola do lusca"));
         System.out.println("Enviado");
     }

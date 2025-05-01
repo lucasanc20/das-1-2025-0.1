@@ -11,7 +11,7 @@ import javax.swing.JTextField;
 
 import br.univille.ativchat.controller.Controller;
 
-public class Form extends JFrame{
+public class Form extends JFrame {
     private JPanel jpnSul;
     private JScrollPane jpnCentro;
     private JTextArea txtChat;
@@ -20,20 +20,22 @@ public class Form extends JFrame{
     private String nome;
     private Controller controller = new Controller(this);
 
-    public String getNome(){
+    public String getNome() {
         return this.nome;
     }
-    public String getMensagem(){
+
+    public String getMensagem() {
         return txtNovaMsg.getText();
     }
-    public void setMensagem(String msg){
-        txtNovaMsg.setText(txtNovaMsg.getText() + "\n" + msg);
+
+    public void setMensagem(String msg) {
+        txtChat.append(msg + "\n");
     }
-    
+
     public Form() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("CHAT");
-        setSize(500,400);
+        setSize(500, 400);
         solicitarNome();
 
         criaJpnCentro();
@@ -49,14 +51,24 @@ public class Form extends JFrame{
             solicitarNome();
         }
     }
+
     private void criaJpnCentro() {
         txtChat = new JTextArea(10, 20);
         jpnCentro = new JScrollPane(txtChat);
-        txtChat.setText("Bem-vindo ao chat!\n\n");	
+        txtChat.setText("Bem-vindo ao chat!\n\n");
         txtChat.setEditable(false);
         txtChat.setLineWrap(true);
         getContentPane().add(jpnCentro, "Center");
     }
+
+    public JTextArea getTxtChat() {
+        return txtChat;
+    }
+
+    public void setTxtChat(JTextArea txtChat) {
+        this.txtChat = txtChat;
+    }
+
     private void criaJpnSul() {
         jpnSul = new JPanel();
         jpnSul.setBorder(BorderFactory.createTitledBorder("Nova Mensagem"));
@@ -67,6 +79,10 @@ public class Form extends JFrame{
         jpnSul.add(btnEnviar);
         btnEnviar.addActionListener(controller);
         getContentPane().add(jpnSul, "South");
+    }
+
+    public JTextField getTxtNovaMsg() {
+        return txtNovaMsg;
     }
 
 }
