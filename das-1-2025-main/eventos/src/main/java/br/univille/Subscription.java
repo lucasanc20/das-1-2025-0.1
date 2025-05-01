@@ -11,15 +11,12 @@ public class Subscription {
         String subscriptionName = "subscription-lusca";
         String fqdns = "sb-das12025-test-brazilsouth.servicebus.windows.net";
 
-        DefaultAzureCredential credential = 
-            new DefaultAzureCredentialBuilder()
-            .build();
-        
-        ServiceBusAdministrationClient adminClient 
-            = new ServiceBusAdministrationClientBuilder()
-            .credential(fqdns, credential)
-            .buildClient();
-        
+        DefaultAzureCredential credential = new DefaultAzureCredentialBuilder()
+        .build();
+        ServiceBusAdministrationClient adminClient = new ServiceBusAdministrationClientBuilder()
+        .credential(fqdns, credential)
+        .buildClient();
+
         adminClient.createSubscription(topicName, subscriptionName);
     }
 }
