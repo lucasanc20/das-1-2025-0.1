@@ -18,7 +18,7 @@ public class BrokerMensagemServiceImpl implements BrokerMensagemService {
 
     private static final String NOME_TOPICO = "topic-chat";
     private static final String NAMESPACE = "sb-das12025-test-brazilsouth.servicebus.windows.net";
-    private static final String NOME_ASSINATURA = "subscription-artur";
+    private static final String NOME_ASSINATURA = "subscription-lusca";
 
     private final DefaultAzureCredential credencialAzure;
     private final ServiceBusSenderClient clienteEnvio;
