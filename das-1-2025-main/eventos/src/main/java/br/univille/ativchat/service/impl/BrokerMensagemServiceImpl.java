@@ -1,6 +1,5 @@
 package br.univille.ativchat.service.impl;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import com.azure.core.amqp.AmqpTransportType;
@@ -16,41 +15,58 @@ import br.univille.ativchat.model.Mensagem;
 import br.univille.ativchat.service.BrokerMensagemService;
 
 public class BrokerMensagemServiceImpl implements BrokerMensagemService {
-    String topicName = "topic-chat";
-    String serviceBus = "sb-das12025-test-brazilsouth.servicebus.windows.net";
-    String subscription = "subscription-" + "artur";
-    private ServiceBusProcessorClient processorClient;
-    DefaultAzureCredential credential = new DefaultAzureCredentialBuilder().build();
 
-    // recebe
+    private static final String NOME_TOPICO = "topic-chat";
+    private static final String NAMESPACE = "sb-das12025-test-brazilsouth.servicebus.windows.net";
+    private static final String NOME_ASSINATURA = "subscription-artur";
 
-    // envia
-    ServiceBusSenderClient senderClient = new ServiceBusClientBuilder()
-            .fullyQualifiedNamespace("sb-das12025-test-brazilsouth.servicebus.windows.net").credential(credential)
-            .transportType(AmqpTransportType.AMQP_WEB_SOCKETS).sender().topicName(topicName).buildClient();
+    private final DefaultAzureCredential credencialAzure;
+    private final ServiceBusSenderClient clienteEnvio;
+    private ServiceBusProcessorClient clienteProcessador;
+
+    public BrokerMensagemServiceImpl() {
+        credencialAzure = new DefaultAzureCredentialBuilder().build();
+
+        clienteEnvio = new ServiceBusClientBuilder()
+                .fullyQualifiedNamespace(NAMESPACE)
+                .credential(credencialAzure)
+                .transportType(AmqpTransportType.AMQP_WEB_SOCKETS)
+                .sender()
+                .topicName(NOME_TOPICO)
+                .buildClient();
+    }
 
     @Override
     public void enviarMensagem(Mensagem mensagem) {
-        senderClient.sendMessage(new ServiceBusMessage(mensagem.nome() + ": " + mensagem.texto()));
-        System.out.println(mensagem);
+        String conteudo = mensagem.nome() + ": " + mensagem.texto();
+        ServiceBusMessage novaMensagem = new ServiceBusMessage(conteudo);
+        clienteEnvio.sendMessage(novaMensagem);
+        System.out.println("Mensagem enviada: " + conteudo);
     }
 
-    // mnetodo do subscriber vem pra dentro e adiciona as mensagens usando o
-    // consumer do java util
     @Override
-    public void buscarMensagens(Consumer<Mensagem> mensagens) {
-        processorClient = new ServiceBusClientBuilder().fullyQualifiedNamespace(serviceBus).credential(credential)
-                .transportType(AmqpTransportType.AMQP_WEB_SOCKETS).processor().topicName(topicName)
-                .subscriptionName(subscription).receiveMode(ServiceBusReceiveMode.PEEK_LOCK).processMessage(context -> {
-                    String body = context.getMessage().getBody().toString();
-                    String[] partes = body.split(": ", 2);
-                    Mensagem mensagem = new Mensagem(partes[0], partes[1]);
-                    mensagens.accept(mensagem);
-                    context.complete();
-                }).processError(context -> {
-                    System.out.println("Erro: " + context.getException().getMessage());
-                }).buildProcessorClient();
-        processorClient.start();
+    public void buscarMensagens(Consumer<Mensagem> consumidor) {
+        clienteProcessador = new ServiceBusClientBuilder()
+                .fullyQualifiedNamespace(NAMESPACE)
+                .credential(credencialAzure)
+                .transportType(AmqpTransportType.AMQP_WEB_SOCKETS)
+                .processor()
+                .topicName(NOME_TOPICO)
+                .subscriptionName(NOME_ASSINATURA)
+                .receiveMode(ServiceBusReceiveMode.PEEK_LOCK)
+                .processMessage(contexto -> {
+                    String corpo = contexto.getMessage().getBody().toString();
+                    String[] dados = corpo.split(": ", 2);
+                    Mensagem mensagemRecebida = new Mensagem(dados[0], dados[1]);
+                    consumidor.accept(mensagemRecebida);
+                    contexto.complete();
+                })
+                .processError(erro -> {
+                    System.err.println("Erro ao processar mensagem: " + erro.getException().getMessage());
+                })
+                .buildProcessorClient();
+
+        clienteProcessador.start();
     }
-    
 }
+
