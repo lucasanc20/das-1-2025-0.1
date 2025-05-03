@@ -39,12 +39,16 @@ Monolito
     
 ## Aula 06/03/2025
 - [Who Needs an Architect?](https://martinfowler.com/ieeeSoftware/whoNeedsArchitect.pdf)
+  
 - O que é arquitetura?
-- Qual o comportamento do arquiteto da "Matrix"?
-- Qual o comportamento do arquiteto ideal?
+É o conjunto de partes mais importantes de um projeto no entendimento interno dele, dos desenvolvedores.
 
-## Aula 12/03/2025
-- F
+- Qual o comportamento do arquiteto da "Matrix"?
+Ele faz todas as decisões importantes sobre como o projeto será feito, as tecnologias que serão utilizadas e a estrutura dele para garantir a integridade conceitual do projeto, garantir que tudo faça sentido junto.
+
+- Qual o comportamento do arquiteto ideal?
+Ele trabalha juntamente com a equipe para entender as entranhas do projeto e orientá-los da melhor maneira, participando da programação, entrando em uma reunião com o time de requisitos, para ter certeza que tudo vai ficar nos trilhos
+
 
 ## Aula 13/03/2025
 [Fundamentos da Arquitetura de Software](https://integrada.minhabiblioteca.com.br/reader/books/9788550819754/epubcfi/6/2%5B%3Bvnd.vst.idref%3Dcover%5D!/4/2/2%4051:2)
