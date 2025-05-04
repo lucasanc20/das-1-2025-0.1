@@ -1,6 +1,5 @@
 package br.univille.ativchat.service;
 
-import java.util.List;
 import java.util.function.Consumer;
 
 import br.univille.ativchat.model.Mensagem;
